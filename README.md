@@ -1,5 +1,7 @@
 # Ima build and run standard
 
+Start with [the project and agent guide](docs/agent-guide.md) for local/Ima entrypoints, skill installation, CI adoption and authority boundaries.
+
 This public repository contains no workload inventory, credentials or customer data. It owns the standard and reusable checks for Ima projects across organizations. Consume a reviewed commit SHA, never a moving workflow reference. Application repos own their Dockerfiles, charts, size budgets and documented exceptions.
 
 ## Workload lifecycle
