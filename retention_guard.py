@@ -8,6 +8,8 @@ PROTECTED = {"receipt", "ledger", "evaluation", "run-log", "branch", "workflow-r
 
 
 def validate(plan):
+    if not isinstance(plan, dict):
+        return ["plan must be an object"]
     errors = []
     if plan.get("reference_inventory_complete") is not True:
         errors.append("reference inventory is incomplete")
@@ -25,10 +27,12 @@ def validate(plan):
             continue
         seen.add(identity)
         kind = item.get("kind")
-        if kind not in DISPOSABLE | PROTECTED:
+        if not isinstance(kind, str) or kind not in DISPOSABLE | PROTECTED:
             errors.append(f"{identity}: unknown kind")
             continue
-        if not isinstance(item.get("references"), list):
+        if not isinstance(item.get("references"), list) or any(
+            not isinstance(ref, str) or not ref.strip() for ref in item["references"]
+        ):
             errors.append(f"{identity}: references must be inventoried")
             continue
         protected = kind in PROTECTED or bool(item["references"])
@@ -47,9 +51,8 @@ def validate(plan):
                 and decision.get("action") == "delete"
                 and isinstance(decision.get("approved_by"), str)
                 and bool(decision.get("approved_by", "").strip())
-                and bool(decision.get("reason"))
-                and bool(decision.get("approval_reference"))
-                and bool(decision.get("loss_or_recovery_record"))
+                and all(isinstance(decision.get(field), str) and decision[field].strip()
+                        for field in ("reason", "approval_reference", "loss_or_recovery_record"))
             ):
                 errors.append(f"{identity}: explicit retention decision required")
         if kind == "image" and item.get("protected_digest_inventory_complete") is not True:

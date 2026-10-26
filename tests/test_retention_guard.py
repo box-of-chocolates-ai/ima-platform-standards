@@ -55,3 +55,21 @@ class RetentionTests(unittest.TestCase):
     def test_duplicate_identity(self):
         p = self.plan(); p["items"].append(copy.deepcopy(p["items"][0]))
         self.assertTrue(validate(p))
+
+    def test_malformed_root_or_kind_returns_errors(self):
+        self.assertTrue(validate([]))
+        for kind in ([], {}, None):
+            self.assertTrue(validate(self.plan(kind)))
+
+    def test_references_require_nonempty_identifiers(self):
+        for ref in (None, {}, "", " "):
+            p = self.plan(); p["items"][0]["references"] = [ref]
+            self.assertTrue(validate(p))
+
+    def test_decision_requires_written_reason_and_recovery_reference(self):
+        p = self.plan("branch")
+        p["items"][0]["retention_decision"] = {
+            "id": "artifact:123", "action": "delete", "approved_by": "operator",
+            "reason": True, "approval_reference": ["decision:123"],
+            "loss_or_recovery_record": " "}
+        self.assertTrue(validate(p))
