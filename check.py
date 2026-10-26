@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Check rendered workload contracts and built image budgets without mutation."""
 import argparse
+from datetime import date
 import json
 from pathlib import Path
 import re
@@ -88,12 +89,26 @@ def image_errors(image, limit):
     return ['image.size_exceeds_budget:' + str(size) + '>' + str(limit)] if size > limit else []
 
 
+def apply_exceptions(errors, exceptions, today=None):
+    today = today or date.today()
+    exempt = set()
+    for entry in exceptions:
+        if (type(entry) is not dict or set(entry) != {'error', 'reason', 'expires'}
+                or not isinstance(entry['error'], str) or not isinstance(entry['reason'], str)
+                or len(entry['reason']) < 40
+                or date.fromisoformat(entry['expires']) < today):
+            raise ValueError('invalid or expired explicit exception')
+        exempt.add(entry['error'])
+    return [error for error in errors if error not in exempt]
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--manifest', action='append', default=[])
     parser.add_argument('--dockerfile', type=Path)
     parser.add_argument('--ignore', type=Path)
     parser.add_argument('--image')
+    parser.add_argument('--exceptions', type=Path)
     parser.add_argument('--max-image-bytes', type=int)
     args = parser.parse_args()
     if not (args.manifest or args.dockerfile or args.image):
@@ -102,13 +117,20 @@ def main():
         parser.error('--dockerfile and --ignore are a pair')
     errors = []
     for path in args.manifest:
-        for document in yaml.safe_load_all(Path(path).read_text()):
+        documents = [d for d in yaml.safe_load_all(Path(path).read_text()) if d is not None]
+        if not documents:
+            errors.append('manifest.empty:' + path)
+        for document in documents:
             errors.extend(workload_errors(document))
     if args.dockerfile:
         errors.extend(docker_errors(args.dockerfile.read_text(), args.ignore.read_text()))
     if args.image:
         errors.extend(image_errors(args.image, args.max_image_bytes))
-    print(json.dumps({'passed': not errors, 'errors': errors}, indent=2))
+    original = list(errors)
+    if args.exceptions:
+        errors = apply_exceptions(errors, json.loads(args.exceptions.read_text()))
+    print(json.dumps({'passed': not errors, 'errors': errors,
+                      'explicit_exceptions_used': sorted(set(original) - set(errors))}, indent=2))
     return bool(errors)
 
 

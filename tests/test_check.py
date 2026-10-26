@@ -1,7 +1,8 @@
 from copy import deepcopy
 import unittest
 
-from check import docker_errors, workload_errors
+from check import apply_exceptions, docker_errors, workload_errors
+from datetime import date
 
 
 def job():
@@ -14,6 +15,11 @@ def job():
 
 
 class Workloads(unittest.TestCase):
+    def test_exception_is_exact_scoped_and_expires(self):
+        errors = ['Job/a:init.security.non_root', 'Job/b:init.security.non_root']
+        entry = dict(error=errors[0], reason='Existing private volume ownership repair needs a separate storage migration.', expires='2026-11-26')
+        self.assertEqual([errors[1]], apply_exceptions(errors, [entry], date(2026, 10, 26)))
+        with self.assertRaises(ValueError): apply_exceptions(errors, [entry], date(2026, 11, 27))
     def test_qualified_job(self):
         self.assertEqual([], workload_errors(job()))
 
