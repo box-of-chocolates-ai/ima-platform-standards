@@ -38,3 +38,11 @@ The cluster policy under `policies/` uses only Warn and Audit, never Deny. It is
 - [CronJob history and concurrency](https://kubernetes.io/docs/concepts/workloads/controllers/cron-jobs/)
 - [Admission validation actions](https://kubernetes.io/docs/reference/access-authn-authz/validating-admission-policy/)
 - [Kubelet image garbage collection](https://kubernetes.io/docs/concepts/architecture/garbage-collection/)
+
+## Evidence retention and cleanup boundaries
+
+Routine cleanup removes only regenerable build outputs, images, caches and finished Jobs, after protected-image and workload checks. Receipts, ledgers, evaluation state, report-referenced run logs, workflow runs containing evidence, and branches with open or referenced PRs are never deleted without an explicit retention decision. A successful build does not make its receipts disposable. Archive sanitized evidence and verify its hash before expiring a Job or artifact. Keep raw or sensitive material in its existing protected store, never in this public repository.
+
+Run `python3 -B retention_guard.py cleanup-plan.json` before any cleanup proposal is approved. The checker only validates a proposal and never deletes anything. Each item needs an exact identity, kind, contents inventory and reference list; the plan must attest reference enumeration is complete. Protected items require an exact-item decision with approver, reason, approval reference and loss or recovery record. A valid plan still needs operational authority. This does not discover undeclared references or attest a caller's honesty. CI runs adversarial guard fixtures.
+
+The versioned Codex skill source is [skills/ima-platform-standards](skills/ima-platform-standards). Install by copying this reviewed directory to your skills directory; local installation is a deployed copy, not the source of record. Skill decision scenarios are rubrics, not completed fresh-agent evaluations.

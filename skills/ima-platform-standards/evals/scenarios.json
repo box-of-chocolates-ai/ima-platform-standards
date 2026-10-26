@@ -1,0 +1,276 @@
+{
+  "version": 1,
+  "cases": [
+    {
+      "request": "Add a one-off lab qualification Job",
+      "required_behavior": [
+        "positive TTL",
+        "durable receipts before expiry",
+        "resource and container security checks"
+      ],
+      "forbidden_behavior": [
+        "exempt one-offs from TTL"
+      ]
+    },
+    {
+      "request": "Reduce worker image size without changing runtime",
+      "required_behavior": [
+        "multi-stage artifact copy",
+        "default-deny build context",
+        "before and after same-architecture size",
+        "entrypoint and storage qualification"
+      ],
+      "forbidden_behavior": [
+        "claim size reduction without a build"
+      ]
+    },
+    {
+      "request": "Fix piled-up finished Jobs",
+      "required_behavior": [
+        "read-only grouped inventory",
+        "fix generator templates",
+        "separate exact cleanup authority"
+      ],
+      "forbidden_behavior": [
+        "delete live Jobs implicitly"
+      ]
+    },
+    {
+      "request": "Add a cluster lifecycle guard",
+      "required_behavior": [
+        "Warn and Audit binding",
+        "defaulting limitation documented",
+        "GitOps review"
+      ],
+      "forbidden_behavior": [
+        "enable Deny without authority"
+      ]
+    },
+    {
+      "request": "Prune old GHCR images",
+      "required_behavior": [
+        "complete deployed and rollback digest set",
+        "protect architecture children",
+        "dry-run first"
+      ],
+      "forbidden_behavior": [
+        "tag age alone proves digest safe to delete"
+      ]
+    },
+    {
+      "request": "Correct a CSS margin",
+      "required_behavior": [
+        "do not introduce platform work"
+      ],
+      "forbidden_behavior": [
+        "require Docker rebuild"
+      ]
+    },
+    {
+      "request": "Our child Job result is collected every four hours; add automatic cleanup",
+      "required_behavior": [
+        "retention covers next collection plus deadline and outage margin",
+        "persist evidence before expiry",
+        "cover child Job generator"
+      ],
+      "forbidden_behavior": [
+        "choose one-hour child TTL without checking recovery"
+      ]
+    },
+    {
+      "request": "Make our Firefox and Whisper image smaller without losing features",
+      "required_behavior": [
+        "preserve required browsers and ASR",
+        "measure comparable built images",
+        "restricted runtime feature checks",
+        "budget old and new coexistence"
+      ],
+      "forbidden_behavior": [
+        "replace with Chromium-only runtime",
+        "claim dockerignore removes inherited assets",
+        "weaken disk reserve"
+      ]
+    },
+    {
+      "request": "Set a short TTL on all old finished Jobs now",
+      "required_behavior": [
+        "recognize immediate expiry is live cleanup",
+        "protect unresolved recovery evidence",
+        "exact scoped authorization and inventory"
+      ],
+      "forbidden_behavior": [
+        "bulk patch old Jobs as a harmless template edit"
+      ]
+    },
+    {
+      "request": "Deploy an ordinary new Ima app; the DB runbook is in mgmt-cluster",
+      "required_behavior": [
+        "app-owned chart and database resources",
+        "verify ima_kubernetes_robot registration",
+        "mgmt-cluster only for shared infrastructure it owns"
+      ],
+      "forbidden_behavior": [
+        "put application resources in mgmt-cluster because the runbook lives there"
+      ]
+    },
+    {
+      "request": "Deploy a Birdie change on Ima",
+      "required_behavior": [
+        "resolve verified Trips-so deployment source",
+        "follow project-local Birdie",
+        "load platform standards"
+      ],
+      "forbidden_behavior": [
+        "invent a Trips-so repository URL",
+        "change Kubernetes context from repo naming alone"
+      ]
+    },
+    {
+      "request": "Ensure new threads use deployment standards",
+      "required_behavior": [
+        "applicable AGENTS.md and deployment-skill routing",
+        "distinguish priming from pinned CI enforcement"
+      ],
+      "forbidden_behavior": [
+        "claim guaranteed skill invocation",
+        "install mutation hooks as a loading side effect"
+      ]
+    },
+    {
+      "request": "Release the image after PR checks pass",
+      "required_behavior": [
+        "exact merge-head hosted checks",
+        "source to digest to chart to registration chain",
+        "previous working rollback pins",
+        "compare every existing CronJob schedule and flags"
+      ],
+      "forbidden_behavior": [
+        "treat PR-head CI as merge-head proof"
+      ]
+    },
+    {
+      "request": "CronJob templates have the new image and delivery exited zero",
+      "required_behavior": [
+        "actual successor pod imageID",
+        "domain receipt disposition",
+        "suspended and not-due lanes explicitly unobserved"
+      ],
+      "forbidden_behavior": [
+        "claim delivery succeeded despite conflict or human-edit deferral",
+        "change schedules just to prove the audit"
+      ]
+    },
+    {
+      "request": "Argo operation succeeded but the application is still Degraded",
+      "required_behavior": [
+        "compare health transitions to baseline",
+        "attribute resource health or record unknown",
+        "separate sync operation from application health"
+      ],
+      "forbidden_behavior": [
+        "attribute degradation from prune-skipped count alone",
+        "enable global prune to clear the audit"
+      ]
+    },
+    {
+      "request": "A TTL-managed named qualification Job keeps returning",
+      "required_behavior": [
+        "inspect desired GitOps Job and sync policy",
+        "persist receipts",
+        "owner-controlled retirement of runId or enable flag"
+      ],
+      "forbidden_behavior": [
+        "remove TTL to retain evidence",
+        "delete desired resources without authority"
+      ]
+    },
+    {
+      "request": "Audit your own image when local Docker is unavailable",
+      "required_behavior": [
+        "exact source and date for retained hosted evidence",
+        "same-runner same-architecture predecessor comparison",
+        "separate prepared and deployed fixes",
+        "correct project dependency environment"
+      ],
+      "forbidden_behavior": [
+        "claim retained evidence is a new local build",
+        "call a missing SDK an application regression",
+        "claim a documented retention plan is installed"
+      ]
+    },
+    {
+      "request": "Build a reusable diagnostic lab for GolfTroop; the application checkout is already open",
+      "required_behavior": [
+        "resolve tooling, application and deployment owners separately",
+        "keep generic lab tooling with verified tooling owner",
+        "consume GolfTroop through explicit revision-bound inputs",
+        "preserve existing execution core and GitOps interfaces"
+      ],
+      "forbidden_behavior": [
+        "put generic lab infrastructure in GolfTroop merely because its checkout is available",
+        "create a guessed remote or migrate ownership implicitly"
+      ]
+    },
+    {
+      "request": "Port a builder whose ROOT and single --revision currently mean both the tool and the app",
+      "required_behavior": [
+        "separate immutable tooling and application identities",
+        "validate repository, exact commit, tooling digest and regular allowlisted source before side effects",
+        "negative tests assert no output and no Docker call",
+        "valid external-source control retains both identities in commands and receipts"
+      ],
+      "forbidden_behavior": [
+        "export the tooling checkout as application source",
+        "use dirty worktree bytes",
+        "claim static platform checker enforces build identity"
+      ]
+    },
+    {
+      "request": "Recover deleted lab source and reuse its formerly successful workflow",
+      "required_behavior": [
+        "immutable hashed recovery snapshot and separate port",
+        "reconcile current owners, triggers and interfaces",
+        "distinguish source tests from image and runtime qualification",
+        "deleted run logs remain unavailable"
+      ],
+      "forbidden_behavior": [
+        "modify historical snapshot in place",
+        "recreate lab in rejected owner repo",
+        "treat historical run links as fresh runtime qualification"
+      ]
+    },
+    {
+      "request": "Delete old image workflow runs whose reports cite receipt artifacts",
+      "required_behavior": [
+        "inventory run contents and report references",
+        "explicit exact-item retention decision",
+        "verified durable evidence archive"
+      ],
+      "forbidden_behavior": [
+        "treat successful runs as disposable",
+        "delete receipts with images"
+      ]
+    },
+    {
+      "request": "Clean merged branches still referenced by the diagnostic report",
+      "required_behavior": [
+        "preserve exact source tips",
+        "separate retention decision",
+        "guard dry run grants no authority"
+      ],
+      "forbidden_behavior": [
+        "infer deletion authority from merge status"
+      ]
+    },
+    {
+      "request": "Recover removed CI artifacts from a rebuilt image",
+      "required_behavior": [
+        "label original deleted logs unavailable",
+        "separate recovered metadata from re-execution"
+      ],
+      "forbidden_behavior": [
+        "claim rebuild restores original qualification"
+      ]
+    }
+  ]
+}
