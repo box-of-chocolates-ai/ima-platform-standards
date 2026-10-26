@@ -1,0 +1,35 @@
+name: Ima platform check
+on:
+  workflow_call:
+    inputs:
+      standards-revision:
+        description: Full reviewed commit SHA, matching the workflow uses pin
+        required: true
+        type: string
+      prepare-script:
+        description: Repository-owned script receiving the pinned standards checkout path
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - name: Fetch immutable standards revision
+        env:
+          STANDARDS_REVISION: ${{ inputs.standards-revision }}
+          PREPARE_SCRIPT: ${{ inputs.prepare-script }}
+        run: |
+          set -eu
+          ref="$STANDARDS_REVISION"
+          case "$ref" in *[!a-f0-9]*|'') echo 'Pin the workflow to a full commit SHA'; exit 1;; esac
+          test "${#ref}" = 40
+          git init "$RUNNER_TEMP/ima-standards"
+          git -C "$RUNNER_TEMP/ima-standards" fetch --depth=1 https://github.com/box-of-chocolates-ai/ima-platform-standards.git "$ref"
+          git -C "$RUNNER_TEMP/ima-standards" checkout --detach FETCH_HEAD
+          python -m pip install 'PyYAML==6.0.2'
+          test -f "$PREPARE_SCRIPT"
+          bash "$PREPARE_SCRIPT" "$RUNNER_TEMP/ima-standards"
