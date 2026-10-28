@@ -1,0 +1,37 @@
+name: Node retention image
+on:
+  push:
+    branches: [main, 'feat/scoped-node-retention-*']
+    paths: ['maintenance/**', 'retention_guard.py', 'tests/test_node_retention.py', '.github/workflows/retention-image.yml']
+  pull_request:
+    paths: ['maintenance/**', 'retention_guard.py', 'tests/test_node_retention.py', '.github/workflows/retention-image.yml']
+permissions:
+  contents: read
+jobs:
+  image:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+      - run: python3 -B -m unittest discover -s tests -v
+      - name: Build, offline smoke and byte budget
+        run: |
+          cp maintenance/.dockerignore .dockerignore
+          docker build -f maintenance/Dockerfile -t retention-check .
+          docker run --rm --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges retention-check --help
+          docker run --rm --network=none --read-only --entrypoint /usr/local/bin/crictl retention-check --version
+          bytes=$(docker image inspect retention-check --format '{{.Size}}')
+          test "$bytes" -le 200000000
+          echo "image_bytes=$bytes" >> "$GITHUB_STEP_SUMMARY"
+      - name: Publish immutable source tag
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          printf '%s' "$GH_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
+          image="ghcr.io/box-of-chocolates-ai/ima-node-retention:sha-${GITHUB_SHA}"
+          docker tag retention-check "$image"
+          docker push "$image"
