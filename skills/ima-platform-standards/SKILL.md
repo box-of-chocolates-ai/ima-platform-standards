@@ -39,6 +39,8 @@ Render all enabled chart modes, including migrations, recovery, qualification an
 
 Prefer the public pinned reusable workflow for cross-organization checks. Keep application-owned preparation scripts and budgets in each repo. Reference this skill from the repo's AGENTS.md. Report any justified exception with scope, reason, expiry and the check it replaces; never silently exclude a failing workload.
 
+Order stable dependency and browser/model asset layers before frequently changing application code where dependencies permit. Use standard gzip registry compression by default; alternate formats require measured benefit and registry/runtime compatibility qualification. Compression does not reduce unpacked filesystem requirements or waive pull/unpack, coexistence and disk-reserve admission. See remediation guidance for measurements and exceptions. Static checks do not prove layer reuse, dependency minimality or compression compatibility.
+
 Registry retention and kubelet image GC are distinct. Inventory first, preserve every deployed and rollback digest and multi-architecture child, and fail closed if the protected set is incomplete. A dry-run deletion plan is not deletion authority. Michael owns node GC settings. New admission policy starts Warn/Audit only, submitted through GitOps for review; never enable Deny or clean up live Jobs as a side effect.
 
 Validate skill edits with `python3 /home/dylan/.codex/skills/.system/skill-creator/scripts/quick_validate.py /home/dylan/.codex/skills/ima-platform-standards`. Behavioral evaluation cases are in `evals/scenarios.json`; execute the canonical checker's adversarial suite as the technical verification, and record decision evaluation separately.
