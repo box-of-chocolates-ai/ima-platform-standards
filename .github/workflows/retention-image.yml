@@ -20,11 +20,12 @@ jobs:
       - name: Build, offline smoke and byte budget
         run: |
           cp maintenance/.dockerignore .dockerignore
-          docker build -f maintenance/Dockerfile -t retention-check .
+          docker build --label org.opencontainers.image.source=https://github.com/box-of-chocolates-ai/ima-platform-standards -f maintenance/Dockerfile -t retention-check .
           docker run --rm --network=none --read-only --cap-drop=ALL --security-opt=no-new-privileges retention-check --help
           docker run --rm --network=none --read-only --entrypoint /usr/local/bin/crictl retention-check --version
           bytes=$(docker image inspect retention-check --format '{{.Size}}')
-          test "$bytes" -le 200000000
+          echo "uncompressed_image_bytes=$bytes"
+          python3 check.py --dockerfile maintenance/Dockerfile --ignore .dockerignore --image retention-check --max-image-bytes 200000000
           echo "image_bytes=$bytes" >> "$GITHUB_STEP_SUMMARY"
       - name: Publish immutable source tag
         if: github.event_name == 'push'
