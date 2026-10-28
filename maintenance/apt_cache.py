@@ -23,7 +23,7 @@ def inventory(fd, now):
             continue
         result.append({'name': name, 'device': s.st_dev, 'inode': s.st_ino,
                        'size': s.st_size, 'blocks': s.st_blocks,
-                       'mtime_ns': s.st_mtime_ns, 'ctime_ns': s.st_ctime_ns})
+                       'mtime_ns': str(s.st_mtime_ns), 'ctime_ns': str(s.st_ctime_ns)})
     return result
 
 

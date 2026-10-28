@@ -96,3 +96,6 @@ downloads only, never installed packages, configuration or journals. Failures
 stop without retry and preserve receipts. Available-byte deltas, rather than
 file-size sums, measure reclamation. Deployment and private plans remain in
 the GitOps owner; this public source contains no node inventories.
+
+Nanosecond timestamps are decimal strings so Helm/JSON numeric conversion cannot
+round identities above 2^53. Rendered policy round-trip tests belong to deployment.
