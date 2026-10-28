@@ -57,6 +57,12 @@ class RetentionTests(unittest.TestCase):
         for candidate in [image(aliases=[]), image(aliases=[REPO + ':old', 'registry.example/other/app:old']), image(pinned=True), image(B)]:
             self.assertEqual([], r.plan([candidate], [], policy())['candidates'])
 
+    def test_tagged_digest_reference(self):
+        alias = REPO + ':release@' + A
+        self.assertEqual(REPO, r.alias_repo(alias))
+        refs = r.container_inventory({'containers': [{'id': 'x', 'imageRef': alias, 'image': alias}]})
+        self.assertEqual([], r.plan([image()], refs, policy())['candidates'])
+
     def test_digest_only_owned_image(self):
         self.assertEqual([image()], r.plan([image()], [], policy())['candidates'])
 

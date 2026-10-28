@@ -39,6 +39,12 @@ def alias_repo(value):
     if "@" in value:
         repo, suffix = value.rsplit("@", 1)
         sha(suffix)
+        # Kubernetes accepts repository:tag@digest; the tag is not ownership.
+        head, slash, tail = repo.rpartition("/")
+        if ":" in tail:
+            tail, _, tag = tail.rpartition(":")
+            require(bool(tag), "invalid tag before digest")
+            repo = head + slash + tail
     else:
         repo, sep, tag = value.rpartition(":")
         require(sep and tag and "/" in repo, "image alias must have repository and tag or digest")
@@ -102,6 +108,8 @@ def validate_policy(policy, node, repository, now=None):
         require(isinstance(release, dict) and release.get("evidence"), "release evidence required")
         require(sha(release.get("digest")) in protected, "release not protected")
     require(isinstance(policy.get("source_snapshots"), list) and policy["source_snapshots"], "source snapshots required")
+    for snapshot in policy["source_snapshots"]:
+        sha(snapshot)
     require(policy.get("rollouts_held") is True and policy.get("approval_reference"), "rollout hold and cleanup authority required")
     return policy
 
