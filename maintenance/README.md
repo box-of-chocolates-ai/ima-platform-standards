@@ -99,3 +99,22 @@ the GitOps owner; this public source contains no node inventories.
 
 Nanosecond timestamps are decimal strings so Helm/JSON numeric conversion cannot
 round identities above 2^53. Rendered policy round-trip tests belong to deployment.
+
+## Old system journal archival
+
+`journal-archive` copies only archived `.journal` files at least seven days old
+from the exact mounted machine journal directory. It does not parse or print log
+contents. Active journals, recent files, symlinks and hardlinks are excluded.
+A separate retained private archive PVC receives opaque copies in exclusive
+0700 directories with 0600 files. Copy, fsync and full SHA-256 readback precede
+publishing the manifest. Partial archives are retained as failed evidence.
+
+`journal-apply` binds an expiring operator approval and exact reviewed manifest.
+It verifies every recovery copy before removing any original, checks source
+metadata again before each unlink, and uses the canonical retention guard with
+an explicit per-file recovery record. The archive mount is read-only for apply;
+only the exact source directory is writable. Neither mode mounts a runtime
+socket, host root or secrets, or invokes a shell. PVC locking serializes modes;
+failures retain the lock for explicit reconciliation rather than automatic retry.
+No automatic retention of the private archive is configured. Preserve it until
+an independently authorized retention decision permits removal.

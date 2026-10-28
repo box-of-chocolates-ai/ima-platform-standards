@@ -247,7 +247,7 @@ def execute(runtime, receipt, mode, policy=None, expected=None, node=None, repos
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("inventory", "plan", "apply", "cache-plan", "cache-apply"), required=True)
+    parser.add_argument("--mode", choices=("inventory", "plan", "apply", "cache-plan", "cache-apply", "journal-archive", "journal-apply"), required=True)
     parser.add_argument("--policy", type=Path, default=Path("/policy/policy.json"))
     parser.add_argument("--expect-plan")
     args = parser.parse_args()
@@ -262,6 +262,13 @@ def main():
         if args.mode.startswith("cache-"):
             from apt_cache import run
             run(receipt, args.mode, policy, args.expect_plan)
+            return 0
+        if args.mode.startswith("journal-"):
+            from journals import run
+            journal_lock = Path("/receipts/.journal-lock")
+            journal_lock.mkdir(exist_ok=False)
+            run(receipt, args.mode, policy, args.expect_plan)
+            journal_lock.rmdir()
             return 0
         lock = Path("/receipts/.apply-lock")
         if args.mode == "apply":
