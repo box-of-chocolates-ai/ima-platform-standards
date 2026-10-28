@@ -75,3 +75,24 @@ CI additionally builds the image, checks its actual uncompressed byte budget,
 and runs Python entrypoint and crictl version checks with no network, read-only
 root filesystem and no capabilities. These checks do not attest host socket
 access. Deployment must qualify inventory-only before explicit apply.
+
+## APT download cache
+
+`cache-plan` inventories only regular, single-link `.deb` files at least seven
+ days old in the fixed `/host-apt-archives` mount. `cache-apply` requires an
+exact reviewed plan hash, node, expiring approval and complete reference
+attestation. It reruns the canonical retention guard and rechecks file metadata
+before each unlink. No file contents are read. Names, device/inode, size,
+allocated blocks and modification/change timestamps bind the plan; these are
+metadata identities, not content hashes. Non-APT writers do not honor its lock,
+so maintenance must not overlap other cache writers.
+
+Both modes hold APT's POSIX record lock (not BSD flock), without creating or
+removing its lock file. Symlinks, directories, hardlinks, young downloads,
+partial downloads and other file types are excluded. The Job for this mode
+mounts only the exact APT archive directory and receipts, with no runtime
+socket, host root, host process access or package database. It removes cached
+downloads only, never installed packages, configuration or journals. Failures
+stop without retry and preserve receipts. Available-byte deltas, rather than
+file-size sums, measure reclamation. Deployment and private plans remain in
+the GitOps owner; this public source contains no node inventories.

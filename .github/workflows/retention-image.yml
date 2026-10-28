@@ -2,9 +2,9 @@ name: Node retention image
 on:
   push:
     branches: [main, 'feat/scoped-node-retention-*']
-    paths: ['maintenance/**', 'retention_guard.py', 'tests/test_node_retention.py', '.github/workflows/retention-image.yml']
+    paths: ['maintenance/**', 'retention_guard.py', 'tests/test_node_retention.py', 'tests/test_apt_cache.py', '.github/workflows/retention-image.yml']
   pull_request:
-    paths: ['maintenance/**', 'retention_guard.py', 'tests/test_node_retention.py', '.github/workflows/retention-image.yml']
+    paths: ['maintenance/**', 'retention_guard.py', 'tests/test_node_retention.py', 'tests/test_apt_cache.py', '.github/workflows/retention-image.yml']
 permissions:
   contents: read
 jobs:
