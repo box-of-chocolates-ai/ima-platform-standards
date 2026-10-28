@@ -80,7 +80,8 @@ def container_inventory(raw):
         require(isinstance(row, dict) and isinstance(row.get("id"), str) and row["id"], "invalid container identity")
         ref = row.get("imageRef")
         require(isinstance(ref, str) and ref, "missing running/stopped container image reference")
-        image = row.get("image", {}).get("image")
+        require(isinstance(row.get("image"), dict), "invalid container image record")
+        image = row["image"].get("image")
         require(isinstance(image, str) and image, "missing container image")
         for value in (ref, image):
             if not DIGEST.fullmatch(value):

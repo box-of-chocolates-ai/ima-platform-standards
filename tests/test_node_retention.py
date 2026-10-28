@@ -60,7 +60,7 @@ class RetentionTests(unittest.TestCase):
     def test_tagged_digest_reference(self):
         alias = REPO + ':release@' + A
         self.assertEqual(REPO, r.alias_repo(alias))
-        refs = r.container_inventory({'containers': [{'id': 'x', 'imageRef': alias, 'image': alias}]})
+        refs = r.container_inventory({'containers': [{'id': 'x', 'imageRef': alias, 'image': {'image': alias}}]})
         self.assertEqual([], r.plan([image()], refs, policy())['candidates'])
 
     def test_digest_only_owned_image(self):
