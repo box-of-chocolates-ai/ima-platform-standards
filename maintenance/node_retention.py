@@ -247,7 +247,7 @@ def execute(runtime, receipt, mode, policy=None, expected=None, node=None, repos
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--mode", choices=("inventory", "plan", "apply"), required=True)
+    parser.add_argument("--mode", choices=("inventory", "plan", "apply", "cache-plan", "cache-apply"), required=True)
     parser.add_argument("--policy", type=Path, default=Path("/policy/policy.json"))
     parser.add_argument("--expect-plan")
     args = parser.parse_args()
@@ -258,7 +258,11 @@ def main():
     receipt = Receipt(Path("/receipts") / run_id)
     signal.signal(signal.SIGTERM, lambda *_: (_ for _ in ()).throw(InterruptedError()))
     try:
-        policy = json.loads(args.policy.read_text()) if args.mode != "inventory" else None
+        policy = json.loads(args.policy.read_text()) if args.mode not in ("inventory", "cache-plan") else None
+        if args.mode.startswith("cache-"):
+            from apt_cache import run
+            run(receipt, args.mode, policy, args.expect_plan)
+            return 0
         lock = Path("/receipts/.apply-lock")
         if args.mode == "apply":
             lock.mkdir(exist_ok=False)

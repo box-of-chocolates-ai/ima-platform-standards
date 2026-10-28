@@ -2,3 +2,4 @@
 !maintenance/
 !maintenance/node_retention.py
 !retention_guard.py
+!maintenance/apt_cache.py
