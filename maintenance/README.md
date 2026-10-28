@@ -56,6 +56,11 @@ record an operator recovery decision before clearing that exact stale lock.
 The first removal error stops and records an independently observed absent,
 still_present or unavailable state. No raw runtime stderr enters logs.
 
+The normalized image/reference inventory is also emitted as a structured event
+for operator retrieval after the Job exits. It contains no container environment,
+mount configuration, runtime stderr or application logs. Treat these logs as
+private workload metadata; do not publish them in this public source repo.
+
 TTL cleanup must follow evidence verification. Do not place historical receipts
 in ConfigMaps. Filesystem availableBytes before/after is the reclamation metric;
 image size sums include shared layers and are not a space-savings claim.
