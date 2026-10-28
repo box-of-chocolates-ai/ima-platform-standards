@@ -55,6 +55,10 @@ class CacheTests(unittest.TestCase):
         (self.path/'partial').mkdir()
         self.assertEqual([p.name], [f['name'] for f in self.plan()['files']])
         self.assertTrue(p.exists())
+        entry=self.plan()['files'][0]
+        self.assertIsInstance(entry['mtime_ns'], str)
+        self.assertIsInstance(entry['ctime_ns'], str)
+        self.assertEqual(str(p.stat().st_ctime_ns), entry['ctime_ns'])
     def test_apply_removes_exact_cache_preserves_everything_else(self):
         p=self.old(); self.old('receipt.json')
         r=self.apply(self.plan())
