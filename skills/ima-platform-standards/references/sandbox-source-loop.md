@@ -53,6 +53,21 @@ received bytes before releasing the application process. An extension or name
 denylist is not a general secret scanner. Review application-specific allowlists.
 Keep all Job/security/resource/deadline/cleanup requirements in force.
 
+## Review access and replacement separately
+
+A generic sync tool does not override an application's exec prohibition. Require
+a reviewed sandbox-only transport scope before use; a review-reference string
+records that decision but does not grant authority. Bind cluster server/public CA,
+namespace UID, reviewed tool identity and qualified platform as well as context.
+Check the named application container/image, not the first container in a list.
+
+Repeated source runs need an owned stop/replacement contract with no overlap.
+Preserve logs before deletion, guard the exact workload UID, confirm old processes
+are gone and then create fresh state. Test destructive preconditions through the
+actual installed client against a local fake API. A mocked argv assertion cannot
+prove the server received the UID guard: an observed `kubectl delete --raw` call
+discarded its DeleteOptions body. Reject uncertain outcomes without blind retry.
+
 ## Record what was actually tested
 
 Keep tooling identity, baseline digest, application HEAD, scoped working-tree
