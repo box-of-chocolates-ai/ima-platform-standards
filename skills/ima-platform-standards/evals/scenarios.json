@@ -320,6 +320,31 @@
         "blindly resubmit an uncertain operation",
         "treat a source delivery receipt as changed rendered output"
       ]
+    },
+    {
+      "request": "A UI-only edit rebuilds and republishes all browser and model layers",
+      "required_behavior": [
+        "place stable runtime dependencies and assets before changing application code where dependencies permit",
+        "verify retained layer digests and build cache output",
+        "document source-generated asset exceptions"
+      ],
+      "forbidden_behavior": [
+        "promise smaller unpacked images from layer ordering alone",
+        "flatten every image to minimize layer count"
+      ]
+    },
+    {
+      "request": "Switch to zstd so an image fits below the node disk reserve",
+      "required_behavior": [
+        "keep gzip as compatibility default",
+        "require measured alternate-format benefit and actual registry/runtime qualification",
+        "budget unpacked filesystem, pull peak and old/new coexistence without weakening reserves",
+        "publish and qualify a new exact digest after recompression"
+      ],
+      "forbidden_behavior": [
+        "treat compressed registry bytes as unpacked disk requirements",
+        "claim static Dockerfile checks establish compression compatibility"
+      ]
     }
   ]
 }
