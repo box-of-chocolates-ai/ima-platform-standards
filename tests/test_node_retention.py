@@ -53,6 +53,23 @@ class FakeRuntime:
 
 
 class RetentionTests(unittest.TestCase):
+    def test_inventory_export_matches_durable_metadata(self):
+        import contextlib
+        import io
+        import json
+        runtime = FakeRuntime()
+        with tempfile.TemporaryDirectory() as tmp:
+            receipt = r.Receipt(Path(tmp) / 'run')
+            output = io.StringIO()
+            with contextlib.redirect_stdout(output):
+                r.execute(runtime, receipt, 'inventory')
+            events = [json.loads(line) for line in output.getvalue().splitlines()]
+            exported = next(event for event in events if event['event'] == 'inventory')
+            saved = json.loads((receipt.path / 'inventory.json').read_text())
+            self.assertEqual(saved, {key: exported[key] for key in ('images', 'containers')})
+            self.assertEqual([], runtime.calls)
+            self.assertEqual(set(exported), {'time', 'event', 'images', 'containers'})
+
     def test_unowned_mixed_unknown_pinned_protected(self):
         for candidate in [image(aliases=[]), image(aliases=[REPO + ':old', 'registry.example/other/app:old']), image(pinned=True), image(B)]:
             self.assertEqual([], r.plan([candidate], [], policy())['candidates'])

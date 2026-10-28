@@ -198,6 +198,9 @@ def execute(runtime, receipt, mode, policy=None, expected=None, node=None, repos
     images, containers = runtime.snapshot()
     receipt.save("inventory.json", {"images": images, "containers": containers})
     receipt.emit("inventory_saved", images=len(images), containers=len(containers))
+    # Export only normalized image/reference metadata for operator retrieval after exit.
+    # The fsynced PVC remains the durable source; no runtime stderr or container config.
+    receipt.emit("inventory", images=images, containers=containers)
     if mode == "inventory":
         return
     validate_policy(policy, node, repository)
