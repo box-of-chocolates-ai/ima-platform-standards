@@ -4,6 +4,22 @@ Start with [the project and agent guide](docs/agent-guide.md) for local/Ima entr
 
 This public repository contains no workload inventory, credentials or customer data. It owns the standard and reusable checks for Ima projects across organizations. Consume a reviewed commit SHA, never a moving workflow reference. Application repos own their Dockerfiles, charts, size budgets and documented exceptions.
 
+## GitOps placement
+
+Keep application charts, values, databases, backup/recovery Jobs, schedules and image
+pins in the owning application repo. Use the verified normal Ima app-of-apps for
+registration, or the existing verified Trips-so deployment chain for Birdie/GolfTroop.
+Treat mgmt-cluster edits as exceptions: verify current ownership and show why the
+exact change cannot live in the application repo or normal app-of-apps. Record the
+resource, evidence, necessity, minimum diff and validation in the plan or PR.
+Existing mgmt placement, a runbook location or convenience does not establish necessity.
+
+Shared operators, cluster-wide infrastructure and release of existing root registrations
+may require mgmt. Such changes retain their own review and authority boundaries. If
+necessity is unclear, continue read-only investigation and app-owned preparation but
+make no mgmt or live mutation. Existing ownership stays intact until an explicitly
+authorized staged transfer; never register a child under two parents.
+
 ## Workload lifecycle
 
 Every Job, including migration hooks, qualification runs, canaries and manually generated lab runs, sets a positive `ttlSecondsAfterFinished`. Default to 86400 seconds after completion. Store receipts in the application evidence store before expiry. Longer retention needs a stated reason and must remain bounded.
