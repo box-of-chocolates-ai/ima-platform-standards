@@ -19,6 +19,8 @@ Before placing reusable lab runners, builders or workflows, distinguish the tool
 
 For cross-repository builds, ports or recovery work, read [build-boundaries.md](references/build-boundaries.md). Require separate immutable tooling and application identities, validate admitted inputs before output creation or build side effects, and test rejection paths. Preserve recovered source as historical evidence; passing source tests does not qualify an image or runtime. These are builder contract requirements, not checks supplied by the current canonical static checker.
 
+For development source sync or sandbox runtime readiness, read [sandbox-source-loop.md](references/sandbox-source-loop.md). Separate baseline provisioning from source iteration and production release. A qualified disposable sandbox may admit uncommitted allowlisted source with content receipts; this does not relax immutable inputs for production builds or qualification claims. Namespace guardrails, source delivery and changed application output are distinct evidence.
+
 ## GitOps ownership and thread priming
 
 Prefer application-owned charts, values, image pins, schedules and database resources in the application repo. Use the normal `mwuhahaha/ima_kubernetes_robot` app-of-apps for ordinary Ima application registration. For Birdie/GolfTroop work, use the appropriate verified Trips-so repository and its existing deployment chain. Trips-so is an organization, not a guessed repository URL: resolve the actual source from project instructions and Argo sources before editing. These are GitOps ownership choices, not instructions to switch Kubernetes contexts.
@@ -38,6 +40,8 @@ Use a digest-pinned multi-stage build with artifacts copied to a slim, non-root 
 Render all enabled chart modes, including migrations, recovery, qualification and canary Jobs. Run the pinned canonical checker against rendered YAML, Dockerfile and .dockerignore; run its image-budget check against the image actually built. Static checks do not replace entrypoint, storage, architecture and runtime qualification. Mount writable scratch space explicitly when adopting a read-only root filesystem.
 
 Prefer the public pinned reusable workflow for cross-organization checks. Keep application-owned preparation scripts and budgets in each repo. Reference this skill from the repo's AGENTS.md. Report any justified exception with scope, reason, expiry and the check it replaces; never silently exclude a failing workload.
+
+Order stable dependency and browser/model asset layers before frequently changing application code where dependencies permit. Use standard gzip registry compression by default; alternate formats require measured benefit and registry/runtime compatibility qualification. Compression does not reduce unpacked filesystem requirements or waive pull/unpack, coexistence and disk-reserve admission. See remediation guidance for measurements and exceptions. Static checks do not prove layer reuse, dependency minimality or compression compatibility.
 
 Registry retention and kubelet image GC are distinct. Inventory first, preserve every deployed and rollback digest and multi-architecture child, and fail closed if the protected set is incomplete. A dry-run deletion plan is not deletion authority. Michael owns node GC settings. New admission policy starts Warn/Audit only, submitted through GitOps for review; never enable Deny or clean up live Jobs as a side effect.
 

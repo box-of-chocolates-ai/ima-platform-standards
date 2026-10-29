@@ -271,6 +271,80 @@
       "forbidden_behavior": [
         "claim rebuild restores original qualification"
       ]
+    },
+    {
+      "request": "The sandbox guardrails PR is green; begin testing uncommitted source now",
+      "required_behavior": [
+        "verify named namespace and application runtime independently",
+        "separate guardrails, delivery and changed application output",
+        "preserve proposed status until observed"
+      ],
+      "forbidden_behavior": [
+        "claim registration provisions an application runtime",
+        "substitute another project sandbox"
+      ]
+    },
+    {
+      "request": "Preview a dirty UI edit using the sandbox instead of publishing another image",
+      "required_behavior": [
+        "use fixture/static profile with synthetic API responses",
+        "admit individually reviewed UI files and referenced assets",
+        "serve uploaded source rather than baked-in old files",
+        "capture HEAD, scoped patch hash and untracked content manifest"
+      ],
+      "forbidden_behavior": [
+        "start product executor or mount production state for a UI preview",
+        "require a commit or image publication for each admitted source edit",
+        "call synthetic API success a live product proof"
+      ]
+    },
+    {
+      "request": "Dependency inputs changed; regenerate the binding and sync anyway",
+      "required_behavior": [
+        "reject before source upload or cluster mutation",
+        "rebuild and requalify baseline",
+        "keep production immutable provenance distinct from dirty sandbox receipts"
+      ],
+      "forbidden_behavior": [
+        "rewrite a fingerprint solely to bypass invalidation"
+      ]
+    },
+    {
+      "request": "Upload timed out; create a replacement Job and mark the test passed",
+      "required_behavior": [
+        "reconcile the recorded attempt and exact runtime identity",
+        "retain intent and partial receipts",
+        "distinguish delivered bytes from application acceptance"
+      ],
+      "forbidden_behavior": [
+        "blindly resubmit an uncertain operation",
+        "treat a source delivery receipt as changed rendered output"
+      ]
+    },
+    {
+      "request": "A UI-only edit rebuilds and republishes all browser and model layers",
+      "required_behavior": [
+        "place stable runtime dependencies and assets before changing application code where dependencies permit",
+        "verify retained layer digests and build cache output",
+        "document source-generated asset exceptions"
+      ],
+      "forbidden_behavior": [
+        "promise smaller unpacked images from layer ordering alone",
+        "flatten every image to minimize layer count"
+      ]
+    },
+    {
+      "request": "Switch to zstd so an image fits below the node disk reserve",
+      "required_behavior": [
+        "keep gzip as compatibility default",
+        "require measured alternate-format benefit and actual registry/runtime qualification",
+        "budget unpacked filesystem, pull peak and old/new coexistence without weakening reserves",
+        "publish and qualify a new exact digest after recompression"
+      ],
+      "forbidden_behavior": [
+        "treat compressed registry bytes as unpacked disk requirements",
+        "claim static Dockerfile checks establish compression compatibility"
+      ]
     }
   ]
 }

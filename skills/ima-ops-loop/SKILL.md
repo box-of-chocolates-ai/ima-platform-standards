@@ -34,8 +34,8 @@ If there is no profile, derive one from the repo and the cluster, use it, and pr
 If any rule here looks wrong for the current task (no dev environment, an emergency fix that cannot wait for dev, the release cap would block a needed fix), tell Dylan at the start with the reason and what you would do instead, before deviating. Never quietly ignore a rule, and never let a rule produce an obviously bad outcome without flagging it. Safety rules are not up for deviation without Dylan's explicit yes.
 
 ## 4. Where to iterate
-
-- Experiment, observe, qualify and benchmark in the project's dev environment from a branch build.
+- Use the project's verified isolated dev runtime. Provision its baseline and access separately from ordinary source iteration. Where a qualified source-sync contract exists, sync allowlisted working-tree edits and restart or hot reload there without a commit, image publication or Argo sync per edit. Dependency/runtime input changes require a rebuilt and requalified baseline.
+- Guardrails or registration alone do not prove runtime readiness. Declare the sandbox identity explicitly, preserve disposable state and source-content receipts, and prove changed application output. Start UI work with a fixture/static profile and synthetic API responses; full application mode is separate. Missing identity or readiness fails closed, with no other-project or production fallback. Apply ima-platform-standards' sandbox source-loop reference for detailed admission and evidence requirements.
 - Production gets one guarded release per app, only after the change works in dev.
 - Dev experiments do not need production release ceremony. Keep that for production.
 
@@ -63,15 +63,22 @@ If any rule here looks wrong for the current task (no dev environment, an emerge
 - Run everything yourself; never hand Dylan commands to run except for the project profile's explicit live-proof protocol when an authorized session or manual trigger requires Dylan. This exception covers only login, MFA, consent, secure session handoff or the specific product proof action; all other safety rules still apply.
 - Plus the project profile's own safety rules.
 
-## 8. Measuring
+## 8. Cleanup and recurrence prevention
+
+- For cleanup or retention work, read [cleanup-policy.md](references/cleanup-policy.md) and ima-platform-standards' evidence-retention guidance. Inventory first; authorization remains scoped to the named resources and operation.
+- Fix the owning Job generators as well as the backlog. Cover one-offs, hooks, recovery and manual factories, not just CronJobs. Persist identity-bound results before expiry and validate generated manifests in CI.
+- Remove only exact, confirmed terminal resources with preserved evidence and resolved dependencies. Recheck GitOps desired state and use UID/resourceVersion delete preconditions. Unknown evidence, active recovery, identity drift or an uncertain write stops that item without a blind retry.
+- Verify target absence and protected workloads/state after cleanup. Classify unrelated CronJob creation/expiry separately; never count it as this operation's deletion or disk savings. Skill instructions and Warn/Audit admission do not establish enforcement or deletion authority.
+
+## 9. Measuring
 
 - Before and after numbers for every speed or size claim, measured the same way (OTel/Tempo spans where available).
 - Separate network time, waits, parsing and startup.
 
-## 9. Report (short, one per turn)
+## 10. Report (short, one per turn)
 
 - Ima detection result and profile used (and any profile PR proposed).
 - What is live (images, nodes) with the profile's live proof.
 - Each item: shipped, parked (with what it needs) or blocked (on whom).
 - Production releases used out of 2.
-- Write the full sanitized handoff/report to a final report file, then execute a bash command to copy its contents to the clipboard. Use the installed xclip-copy skill's verified helper with `--file /absolute/path/handoff-report.md` when available; otherwise execute `cat /absolute/path/handoff-report.md | xclip -selection clipboard`, then compare the report and clipboard SHA-256 hashes without printing the payload. Report the path and copy verification result. Do not print a literal `$xclip` instruction as a substitute for executing it. If X11 or xclip is unavailable, preserve the report and state the blocker.
+- Preserve a sanitized report artifact when the work needs a durable handoff. Do not append a literal clipboard instruction. Copy the report only when Dylan explicitly requests clipboard output; use the xclip-copy skill and verify the round trip without displaying private payloads.
