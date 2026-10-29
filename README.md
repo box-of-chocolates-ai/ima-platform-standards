@@ -64,3 +64,9 @@ Routine cleanup removes only regenerable build outputs, images, caches and finis
 Run `python3 -B retention_guard.py cleanup-plan.json` before any cleanup proposal is approved. The checker only validates a proposal and never deletes anything. Each item needs an exact identity, kind, contents inventory and reference list; the plan must attest reference enumeration is complete. Protected items require an exact-item decision with approver, reason, approval reference and loss or recovery record. A valid plan still needs operational authority. This does not discover undeclared references or attest a caller's honesty. CI runs adversarial guard fixtures.
 
 The versioned Codex skill source is [skills/ima-platform-standards](skills/ima-platform-standards). Install by copying this reviewed directory to your skills directory; local installation is a deployed copy, not the source of record. Skill decision scenarios are rubrics, not completed fresh-agent evaluations.
+
+## Manual node maintenance
+
+[Manual node retention](maintenance/README.md) provides a separately deployed,
+fixed-command CRI implementation with inventory-first qualification, expiring
+policy and reviewed plan binding. It enables no cleanup or node access by itself.

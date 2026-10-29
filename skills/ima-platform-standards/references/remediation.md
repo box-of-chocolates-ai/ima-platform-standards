@@ -36,6 +36,16 @@ Qualify baseline and candidate against the same entrypoint, architecture, non-ro
 
 Before node adoption, budget pull/unpack peak, old/new coexistence, scratch and the existing disk reserve. Keep rollback available. Do not weaken admission floors to make a smaller image fit. Publish and deploy are separate evidence lanes; use the reviewed pinned-digest release path, verify runtime IDs and check functionality after rollout.
 
+## Layer reuse and registry compression
+
+Put stable dependency manifests, installed runtime dependencies and browser/model assets before frequently changing application code where the dependency graph permits. Keep build-only downloads in builder stages or BuildKit cache mounts. A source-only edit should not rebuild or republish unchanged large payload layers. Validate this using retained build/cache output and layer digests; document exceptions for assets generated from application source. Fewer layers is not itself a size goal, and flattening is not the default.
+
+Use standard gzip registry layers by default. BuildKit also supports zstd and other formats, but an alternative requires a same-input comparison of registry bytes, build/recompression cost and cold-pull/startup behavior, plus qualification with the actual registry and node runtime. Recompression changes blob and manifest identities: publish a new candidate and requalify its exact digest rather than rewriting a deployed identity. A smaller transfer is not evidence of a smaller unpacked filesystem or uniquely reclaimable node storage. Preserve existing disk reserves and old/new coexistence budgets.
+
+These are build and release evidence requirements, not capabilities supplied by the current static checker. Source lint does not establish cache reuse, minimal dependencies, actual compression support or runtime functionality.
+
+Primary references: [Docker build best practices](https://docs.docker.com/build/building/best-practices/), [cache ordering and mounts](https://docs.docker.com/build/cache/optimize/), and [image exporter compression options](https://docs.docker.com/build/exporters/image-registry/).
+
 ## Evidence and closure
 
 Report the owning files changed, before/after byte measurements and denominator, retention windows, protected rollback set, commands actually run and their outcomes, deployed identity when applicable, and remaining capacity or qualification limits. Do not claim cleanup from a dry run, size savings from a Dockerfile edit, or runtime acceptance from CI alone.
