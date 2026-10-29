@@ -64,11 +64,18 @@ without Dylan's explicit yes.
 - Run everything yourself; never hand Dylan commands to run.
 - Plus the project profile's own safety rules.
 
-## 8. Measuring
+## 8. Cleanup and recurrence prevention
+
+- For cleanup or retention work, read [cleanup-policy.md](references/cleanup-policy.md) and ima-platform-standards' evidence-retention guidance. Inventory first; authorization remains scoped to the named resources and operation.
+- Fix the owning Job generators as well as the backlog. Cover one-offs, hooks, recovery and manual factories, not just CronJobs. Persist identity-bound results before expiry and validate generated manifests in CI.
+- Remove only exact, confirmed terminal resources with preserved evidence and resolved dependencies. Recheck GitOps desired state and use UID/resourceVersion delete preconditions. Unknown evidence, active recovery, identity drift or an uncertain write stops that item without a blind retry.
+- Verify target absence and protected workloads/state after cleanup. Classify unrelated CronJob creation/expiry separately; never count it as this operation's deletion or disk savings. Skill instructions and Warn/Audit admission do not establish enforcement or deletion authority.
+
+## 9. Measuring
 - Before and after numbers for every speed or size claim, measured the same way (OTel/Tempo spans where available).
 - Separate network time, waits, parsing and startup.
 
-## 9. Report (short, one per turn)
+## 10. Report (short, one per turn)
 - Ima detection result and profile used (and any profile PR proposed).
 - What is live (images, nodes) with the profile's live proof.
 - Each item: shipped, parked (with what it needs) or blocked (on whom).
