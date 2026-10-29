@@ -34,6 +34,7 @@ If there is no profile, derive one from the repo and the cluster, use it, and pr
 If any rule here looks wrong for the current task (no dev environment, an emergency fix that cannot wait for dev, the release cap would block a needed fix), tell Dylan at the start with the reason and what you would do instead, before deviating. Never quietly ignore a rule, and never let a rule produce an obviously bad outcome without flagging it. Safety rules are not up for deviation without Dylan's explicit yes.
 
 ## 4. Where to iterate
+
 - Use the project's verified isolated dev runtime. Provision its baseline and access separately from ordinary source iteration. Where a qualified source-sync contract exists, sync allowlisted working-tree edits and restart or hot reload there without a commit, image publication or Argo sync per edit. Dependency/runtime input changes require a rebuilt and requalified baseline.
 - Guardrails or registration alone do not prove runtime readiness. Declare the sandbox identity explicitly, preserve disposable state and source-content receipts, and prove changed application output. Start UI work with a fixture/static profile and synthetic API responses; full application mode is separate. Missing identity or readiness fails closed, with no other-project or production fallback. Apply ima-platform-standards' sandbox source-loop reference for detailed admission and evidence requirements.
 - Production gets one guarded release per app, only after the change works in dev.
