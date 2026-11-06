@@ -118,3 +118,35 @@ socket, host root or secrets, or invokes a shell. PVC locking serializes modes;
 failures retain the lock for explicit reconciliation rather than automatic retry.
 No automatic retention of the private archive is configured. Preserve it until
 an independently authorized retention decision permits removal.
+
+## Separate scoped seccomp provisioning
+
+`seccomp_profile.py` is a separate operation, not a node-retention mode. It admits
+only the reviewed Patchright amd64/no-capabilities OCI bytes. Application code
+never receives its host mount or UID 0. Deployment and node identity bindings
+belong to the normal Ima GitOps repository, not mgmt-cluster.
+
+The proposed one-shot Job mounts only `/var/lib/kubelet/seccomp/captcha-lab` at
+`/host-seccomp`, its immutable configuration at `/profile`, and the existing
+private maintenance receipt PVC at `/receipts`. It needs UID 0 for the root-owned
+profile directory but no Linux capabilities, privileged mode, runtime socket,
+host shell/namespaces, network, API token, or broad host-root mount. It changes no
+kubelet flags, runtime defaults, AppArmor profiles or security admission policies.
+
+The expiring request binds node name and expected node UID, run ID and profile
+hash. The caller must independently verify actual node UID before activation and
+after collection; a downward API node name is not a node-UID attestation. The
+installer persists intent before writes, publishes complete bytes without
+replacement, checks readback, and persists a completion receipt. Existing exact
+read-only bytes can be adopted in a new run without rewriting them. A repeated
+run ID, unfinished intent, unsafe directory, symlink/hardlink or mismatched file
+stops execution. A failed/uncertain run is never blindly retried.
+
+Provisioning is not native qualification. Preserve original browser failures and
+require an isolated all-network-denied native namespace probe followed by actual
+sandboxed browser controls. A denied AppArmor boundary requires a separate scoped
+review, not `Unconfined`. No profile removal or overwrite command is supplied;
+rollback disables future consumers and retains the installed inert file until
+an explicit no-consumer removal decision. Disable the desired one-shot operation
+before TTL so Argo cannot recreate it. Archive request, rendered manifest,
+actual Job/Pod/node/imageID, intent and receipt before expiry.
