@@ -28,6 +28,17 @@ jobs:
           echo "uncompressed_image_bytes=$bytes"
           python3 check.py --dockerfile maintenance/Dockerfile --ignore .dockerignore --image retention-check --max-image-bytes 200000000
           echo "image_bytes=$bytes" >> "$GITHUB_STEP_SUMMARY"
+      - name: Scoped profile installer in restricted runtime
+        run: |
+          name="seccomp-installer-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          trap 'docker rm -f "$name" >/dev/null 2>&1 || true' EXIT
+          timeout 90 docker run --name "$name" --rm --network=none --read-only \
+            --user=0:65532 --cap-drop=ALL --security-opt=no-new-privileges \
+            --memory=128m --memory-swap=128m --cpus=1 --pids-limit=64 \
+            --tmpfs=/tmp:rw,noexec,nosuid,nodev,size=32m,uid=0,gid=65532,mode=1777 \
+            --mount "type=bind,source=${GITHUB_WORKSPACE},target=/source,readonly" \
+            --workdir=/source --entrypoint=python3 retention-check \
+            -B -m unittest discover -s tests -p test_seccomp_profile.py -v
       - name: Publish immutable source tag
         if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         env:
